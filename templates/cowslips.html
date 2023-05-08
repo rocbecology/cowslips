@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cowslips</title>
+  <style>
+    body {
+      background-color: #98FB98; /* Light leaf green */
+      color: #000000; /* Black */
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    .left-content {
+      text-align: left;
+      margin-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  {% if message %}
+  <p>{{ message }}</p>
+  {% endif %}
+
+
+  <h1>Cowslips</h1>
+  <img src="{{ image_url }}" alt="Cowslip Flower">
+  <form method="POST" action="{{ url_for('submit') }}">
+    <input type="hidden" name="image_id" value="{{ image_id }}">
+    <input type="hidden" name="image_url" value="{{ image_url }}">
+    <label for="flower_type">Choose the flower type:</label>
+    <select name="flower_type" id="flower_type">
+      <option value="U">Not Visible</option>
+      <option value="S">S-morph</option>
+      <option value="L">L-morph</option>
+    </select>
+    <button type="submit">Submit</button>  
+  </form>
+  <div class="left-content">
+    <h2>Why study cowslips</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada.</p>
+    <h3>How to tell between types</h3>
+    <img src="https://static.s123-cdn-static-d.com/uploads/7617194/normal_640c9aff6db54.jpg" alt="How to tell between types">
+  </div>
+</body>
+</html>
