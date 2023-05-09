@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import csv
+import logging
 from flask import Flask, render_template, request, redirect, url_for
 from random import sample
 import psycopg2
@@ -30,6 +31,15 @@ images = pd.read_csv('images.csv')
 images = images.sample(frac=1).reset_index(drop=True)
 
 app = Flask(__name__)
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Custom error handler to log exceptions
+@app.errorhandler(Exception)
+def handle_exception(e):
+    app.logger.exception(e)
+    return str(e), 500
 
 @app.route('/image/<int:image_index>')
 def image(image_index):
