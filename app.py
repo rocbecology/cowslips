@@ -10,6 +10,19 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cur = conn.cursor()
 
+# Create the responses table if it doesn't exist
+cur.execute("""
+CREATE TABLE IF NOT EXISTS responses (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(255),
+    image_id INTEGER,
+    image_url TEXT,
+    response TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+""")
+conn.commit()
+
 # Load the CSV file with image IDs and URLs
 images = pd.read_csv('images.csv')
 
@@ -32,7 +45,7 @@ def submit():
     flower_type = request.form.get('flower_type')
 
     # Insert the submitted data into the database
-    cur.execute("INSERT INTO responses (id, url, response) VALUES (%s, %s, %s)", (image_id, image_url, flower_type))
+    cur.execute("INSERT INTO responses (image_id, image_url, response) VALUES (%s, %s, %s)", (image_id, image_url, flower_type))
     conn.commit()
 
     image_index = images[images['ID'] == int(image_id)].index[0]
