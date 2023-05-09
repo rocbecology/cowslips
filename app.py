@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS responses (
     response TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 """)
 conn.commit()
 
@@ -55,14 +56,19 @@ def submit():
     image_url = request.form.get('image_url')
     flower_type = request.form.get('flower_type')
 
-    # Insert the submitted data into the database
-    cur.execute("INSERT INTO responses (user_id, image_id, image_url, response) VALUES (%s, %s, %s, %s)", (user_id, image_id, image_url, flower_type))
-    conn.commit()
+    try:
+        # Insert the submitted data into the database
+        cur.execute("INSERT INTO responses (user_id, image_id, image_url, response) VALUES (%s, %s, %s, %s)", (user_id, image_id, image_url, flower_type))
+        conn.commit()
+    except Exception as e:
+        print("Error:", e)
+        conn.rollback()
 
     image_index = images[images['ID'] == int(image_id)].index[0]
     next_image_index = (image_index + 1) % len(images)
 
     return redirect(url_for('image', image_index=next_image_index, message="Thank you for your submission!"))
+
 
 @app.route('/')
 def index():
